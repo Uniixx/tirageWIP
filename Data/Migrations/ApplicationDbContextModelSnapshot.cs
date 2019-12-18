@@ -261,6 +261,9 @@ namespace Tirage.Data.Migrations.IdentityServer.PersistedGrantDb
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Nom")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -277,6 +280,12 @@ namespace Tirage.Data.Migrations.IdentityServer.PersistedGrantDb
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Prenom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -303,8 +312,10 @@ namespace Tirage.Data.Migrations.IdentityServer.PersistedGrantDb
 
             modelBuilder.Entity("Tirage.Models.Event", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -318,9 +329,6 @@ namespace Tirage.Data.Migrations.IdentityServer.PersistedGrantDb
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TicketId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
@@ -329,19 +337,50 @@ namespace Tirage.Data.Migrations.IdentityServer.PersistedGrantDb
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("Tirage.Models.Ticket", b =>
+            modelBuilder.Entity("Tirage.Models.Participant", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Creation_Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EventId")
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EventId1")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Nom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prenom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telephone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Terrain")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Participants");
+                });
+
+            modelBuilder.Entity("Tirage.Models.Ticket", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Creation_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -358,9 +397,10 @@ namespace Tirage.Data.Migrations.IdentityServer.PersistedGrantDb
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("EventId1");
+                    b.HasKey("Id");
 
                     b.ToTable("Tickets");
                 });
@@ -414,13 +454,6 @@ namespace Tirage.Data.Migrations.IdentityServer.PersistedGrantDb
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Tirage.Models.Ticket", b =>
-                {
-                    b.HasOne("Tirage.Models.Event", "Event")
-                        .WithMany()
-                        .HasForeignKey("EventId1");
                 });
 #pragma warning restore 612, 618
         }

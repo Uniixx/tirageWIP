@@ -38,7 +38,7 @@ namespace Tirage.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(string Id)
+        public IActionResult Get(long Id)
         {
             List<Ticket> tickets = _tickets.GetTicketsByEvent(Id);
 

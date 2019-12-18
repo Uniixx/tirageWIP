@@ -7,7 +7,7 @@ import Moment from 'react-moment';
 
 import { Button, Icon, Table, Container, Modal, Form } from "semantic-ui-react";
 
-export class ManageTickets extends Component {
+export class Billets extends Component {
   static displayName = "Manage Tickets";
 
   constructor(props) {

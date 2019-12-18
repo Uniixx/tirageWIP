@@ -54,6 +54,7 @@ namespace Tirage
         {
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

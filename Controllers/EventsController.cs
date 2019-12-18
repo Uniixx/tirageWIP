@@ -43,7 +43,6 @@ namespace Tirage.Controllers
         public IActionResult Post(Event model)
         {
             _events.Create(model);
-
             return Ok(model);
         }
     }

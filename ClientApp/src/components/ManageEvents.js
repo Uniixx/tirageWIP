@@ -12,7 +12,15 @@ import axios from "axios";
 
 import Moment from "react-moment";
 
-import { Button, Icon, Table, Container, Modal, Form, Header } from "semantic-ui-react";
+import {
+  Button,
+  Icon,
+  Table,
+  Container,
+  Modal,
+  Form,
+  Header
+} from "semantic-ui-react";
 
 import { Link } from "react-router-dom";
 
@@ -21,9 +29,11 @@ export class ManageEvents extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { user: {}, events: [], Nom: "", Prénom: "" };
+    this.state = { user: {}, events: [], Nom: "", Debut: "", Fin: "" };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeTime = this.handleChangeTime.bind(this);
+    this.createNewEvent = this.createNewEvent.bind(this);
   }
 
   async fetchEventsData() {
@@ -36,12 +46,19 @@ export class ManageEvents extends Component {
   }
 
   async createNewEvent() {
-    axios.post("events", {
-      Number: this.state.number,
-      Name: this.state.eventName,
-      FirstName: this.state.lastName,
-      LastName: this.state.firstName,
-      EventId: this.state.eventId
+    const token = await authService.getAccessToken();
+    this.setState({ events: [...this.state.events, { name: this.state.Nom, endDate: this.state.Fin, startDate: this.state.Debut, UserId: this.state.user.sub }] })
+    axios.post("events/",
+    {
+      Name: this.state.Nom,
+      startDate: new Date(this.state.Debut).toISOString(),
+      endDate: new Date(this.state.Fin).toISOString(),
+      UserId: this.state.user.sub,
+      over: false
+    },
+    { 
+      withCredentials: true,
+      headers: !token ? {} : { Authorization: `Bearer ${token}` } 
     });
   }
 
@@ -60,6 +77,12 @@ export class ManageEvents extends Component {
       ...this.state,
       [evt.target.name]: value
     });
+  }
+
+  handleChangeTime (event, {name, value}) {
+    if (this.state.hasOwnProperty(name)) {
+      this.setState({ [name]: value });
+    }
   }
 
   render() {
@@ -102,9 +125,7 @@ export class ManageEvents extends Component {
                       >
                         <Header icon="ticket" content="Lancer le tirage" />
                         <Modal.Content>
-                          <p>
-                            Êtes-vous sûr de vouloir commencer le tirage?
-                          </p>
+                          <p>Êtes-vous sûr de vouloir commencer le tirage?</p>
                         </Modal.Content>
                         <Modal.Actions>
                           <Button basic color="red" inverted>
@@ -152,23 +173,25 @@ export class ManageEvents extends Component {
                             onChange={this.handleChange}
                           />
                           <DateTimeInput
-                            name="dateTime"
+                            name="Debut"
                             placeholder="Date Time"
+                            dateTimeFormat="YYYY-MM-DDTHH:mm"
                             label="Date de début"
-                            value={this.state.dateTime}
+                            value={this.state.Debut}
                             iconPosition="left"
-                            onChange={this.handleChange}
+                            onChange={this.handleChangeTime}
                           />
                           <DateTimeInput
-                            name="dateTime"
+                            name="Fin"
+                            dateTimeFormat="YYYY-MM-DDTHH:mm"
                             placeholder="Date Time"
-                            value={this.state.dateTime}
+                            value={this.state.Fin}
                             label="Date de fin"
                             iconPosition="left"
-                            onChange={this.handleChange}
+                            onChange={this.handleChangeTime}
                           />
                         </Form.Group>
-                        <Form.Button>Créer</Form.Button>
+                        <Form.Button onClick={this.createNewEvent}>Créer</Form.Button>
                       </Form>
                     </Modal.Content>
                   </Modal>

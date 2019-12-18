@@ -103,9 +103,13 @@ export class NavMenu extends Component {
               <Icon name="home"/>
               Accueil
             </Menu.Item>
-            <Menu.Item as="a" href="manage-events">
-              <Icon name="add to calendar" />
-              Mes tirages
+            <Menu.Item as="a" href="utilisateurs">
+              <Icon name="user" />
+              Utilisateurs
+            </Menu.Item>
+            <Menu.Item as="a" href="tirages">
+              <Icon name="calendar plus" />
+              Mes Tirages
             </Menu.Item>
             <Menu.Item as="a" onClick={this.logout}>
               <Icon name="user delete" />

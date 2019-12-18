@@ -10,8 +10,8 @@ namespace Tirage.Repositories
     public interface ITicketRepository
     {
         public List<Ticket> GetTickets();
-        public List<Ticket> GetTicketsByEvent(string Id);
-        public void Save(Ticket ticket);
+        public List<Ticket> GetTicketsByEvent(long Id);
+        public Ticket Save(Ticket ticket);
         public void Delete(string Number);
     }
     public class TicketRepository : ITicketRepository
@@ -28,17 +28,18 @@ namespace Tirage.Repositories
             return _context.Tickets.ToList();
         }
 
-        public List<Ticket> GetTicketsByEvent(string Id)
+        public List<Ticket> GetTicketsByEvent(long Id)
         {
             var tickets = GetTickets();
 
             return tickets.Where(x => x.EventId == Id).ToList();
         }
 
-        public void Save(Ticket ticket)
+        public Ticket Save(Ticket ticket)
         {
             _context.Tickets.Add(ticket);
             _context.SaveChanges();
+            return ticket;
         }
 
         public void Delete(string Number)
